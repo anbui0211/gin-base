@@ -21,8 +21,8 @@ func (m UserCreate) Validate() error {
 	)
 }
 
-func (m UserCreate) ConvertToUserModel() *pgmodel.User {
-	return &pgmodel.User{
+func (m UserCreate) ConvertToUserModel() pgmodel.User {
+	return pgmodel.User{
 		PgModel: pgmodel.PgModel{
 			ID:        uuid.New(),
 			Status:    "inactive",

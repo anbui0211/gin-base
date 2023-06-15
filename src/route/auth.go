@@ -14,4 +14,6 @@ func auth(r *gin.RouterGroup) {
 	)
 
 	g.POST("/register", v.Register(), h.Register)
+	//g.POST("/login", v.Register(), h.Login)
+
 }

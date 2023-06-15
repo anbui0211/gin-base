@@ -4,7 +4,7 @@ import "gorm.io/gorm"
 
 // UserCol ...
 func UserCol() *gorm.DB {
-	return ConnectDBEcommerce().Table(UserTable)
+	return db.Table(UserTable)
 }
 
 const (

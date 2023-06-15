@@ -11,7 +11,12 @@ func R400(c *gin.Context, data interface{}, err error) {
 
 	errMsg := errList[len(errList)-1] // "username: username invalid"
 
-	formatErrMsg := strings.TrimSpace(strings.Split(errMsg, ":")[1]) // "username invalid"
+	splitErr := strings.Split(errMsg, ":")
+
+	formatErrMsg := splitErr[0]
+	if len(splitErr) > 1 {
+		formatErrMsg = strings.TrimSpace(splitErr[1]) // "username invalid"
+	}
 
 	if err == nil {
 		errMsg = CommonBadRequest

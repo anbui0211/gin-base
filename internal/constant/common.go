@@ -6,11 +6,6 @@ const (
 )
 
 const (
-	ErrEmptyUsername = "username không được trống"
-	ErrEmptyPassword = "mật khẩu không được trống"
-)
-
-const (
 	StatusActive   = "active"
 	StatusInactive = "inactive"
 )
