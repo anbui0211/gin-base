@@ -24,6 +24,15 @@ func User() UserInterface {
 	return userImpl{}
 }
 
+// Create godoc
+//
+//	@Summary		Create user
+//	@Tags			users
+//	@Accept			json
+//	@Produce		json
+//	@Param			payload	body		requestmodel.UserCreate	true	"userPayload"
+//	@Success		200		{object}	 responsemodel.Upsert
+//	@Router			/users [post]
 func (userImpl) Create(c *gin.Context) {
 	var (
 		ctx           = gincontext.GetContext(c)
@@ -41,6 +50,14 @@ func (userImpl) Create(c *gin.Context) {
 	return
 }
 
+// All godoc
+// @Summary      List user
+// @Tags         users
+// @Accept       json
+// @Produce      json
+// @Param 		 payload query querymodel.UserAll true "Query"
+// @Success      200  {object}   responsemodel.UserAll
+// @Router       /users [get]
 func (h userImpl) All(c *gin.Context) {
 	var (
 		ctx   = gincontext.GetContext(c)
@@ -53,6 +70,14 @@ func (h userImpl) All(c *gin.Context) {
 	return
 }
 
+// Detail godoc
+// @Summary      Detail user
+// @Tags         users
+// @Accept       json
+// @Produce      json
+// @Param  id path string true "userId"
+// @Success      200  {object}   responsemodel.UserDetail
+// @Router       /users/{id} [get]
 func (userImpl) Detail(c *gin.Context) {
 	var (
 		id  = gincontext.GetParam(c, "id").(string)
@@ -68,6 +93,18 @@ func (userImpl) Detail(c *gin.Context) {
 	response.R200(c, gin.H{"data": res}, "")
 }
 
+// Update godoc
+//
+//	@Summary		Update user
+//	@Tags			users
+//	@Accept			json
+//	@Produce		json
+//
+// @Param  id path string true "userId"
+//
+//	@Param			payload	body		requestmodel.UserUpdate	true	"userPayload"
+//	@Success		200		{object}	 responsemodel.Upsert
+//	@Router			/users/{id} [put]
 func (userImpl) Update(c *gin.Context) {
 	var (
 		id      = gincontext.GetParam(c, "id").(string)
@@ -86,6 +123,18 @@ func (userImpl) Update(c *gin.Context) {
 	return
 }
 
+// ChangeStatus godoc
+//
+//	@Summary		Change Status User
+//	@Tags			users
+//	@Accept			json
+//	@Produce		json
+//
+// @Param  id path string true "userId"
+//
+//	@Param			payload	body		requestmodel.UserChangeStatus	true	"userPayload"
+//	@Success		200		{object}	 responsemodel.Upsert
+//	@Router			/users/{id}/status [patch]
 func (userImpl) ChangeStatus(c *gin.Context) {
 	var (
 		id      = gincontext.GetParam(c, "id").(string)

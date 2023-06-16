@@ -10,6 +10,7 @@ import (
 	requestmodel "gin-base/src/model/request"
 	responsemodel "gin-base/src/model/response"
 	"github.com/google/uuid"
+	"log"
 	"time"
 )
 
@@ -24,18 +25,10 @@ func Auth() AuthInterface {
 }
 
 func (s authImpl) Register(ctx context.Context, payload requestmodel.Register) (*responsemodel.Auth, error) {
-	var (
-		db   = config.UserCol()
-		user pgmodel.User
-	)
+	var db = config.UserCol()
 
-	// Check invalid user
-	if err := db.Where("username = ?", payload.Username).First(&user).Error; err != nil {
-		if err.Error() == "record not found" {
-			return nil, errors.New(constant.ErrIsExistedUsername)
-		}
-
-		return nil, err
+	if isExisted := s.isExistedUser(ctx, payload.Username); isExisted {
+		return nil, errors.New(constant.ErrAlreadyExistUsername)
 	}
 
 	newUser := pgmodel.User{
@@ -54,8 +47,8 @@ func (s authImpl) Register(ctx context.Context, payload requestmodel.Register) (
 	}
 
 	token, err := authinternal.GenerateToken(authinternal.User{
-		ID:   user.ID.String(),
-		Name: user.Name,
+		ID:   newUser.ID.String(),
+		Name: newUser.Name,
 	})
 
 	if err != nil {
@@ -65,4 +58,20 @@ func (s authImpl) Register(ctx context.Context, payload requestmodel.Register) (
 	return &responsemodel.Auth{
 		Token: token,
 	}, nil
+}
+
+func (s authImpl) isExistedUser(ctx context.Context, username string) bool {
+	var (
+		db   = config.UserCol()
+		user pgmodel.User
+	)
+
+	// Check invalid user
+	err := db.Where("username = ?", username).First(&user).Error
+	if err != nil && err.Error() == "record not found" {
+		log.Println("[Auth - isExistedUser] - err: ", err)
+		return false
+	}
+
+	return true
 }

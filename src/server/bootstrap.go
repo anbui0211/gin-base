@@ -12,5 +12,4 @@ func Bootstrap(r *gin.Engine) {
 	log.Println("Initializing server ...")
 	initialize.Init(r)
 	route.Init(r)
-
 }

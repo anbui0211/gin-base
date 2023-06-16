@@ -1,0 +1,238 @@
+basePath: /api/v1
+definitions:
+  requestmodel.Register:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      phone:
+        type: string
+      username:
+        type: string
+    type: object
+  requestmodel.UserChangeStatus:
+    properties:
+      status:
+        type: string
+    type: object
+  requestmodel.UserCreate:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+    type: object
+  requestmodel.UserUpdate:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+    required:
+    - email
+    - name
+    type: object
+  responsemodel.Auth:
+    properties:
+      token:
+        type: string
+    type: object
+  responsemodel.Upsert:
+    properties:
+      id:
+        type: string
+    type: object
+  responsemodel.UserAll:
+    properties:
+      limit:
+        type: integer
+      list:
+        items:
+          $ref: '#/definitions/responsemodel.UserBrief'
+        type: array
+      total:
+        type: integer
+    type: object
+  responsemodel.UserBrief:
+    properties:
+      createdAt:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      status:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+  responsemodel.UserDetail:
+    properties:
+      createdAt:
+        type: string
+      email:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      status:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+externalDocs:
+  description: OpenAPI
+  url: https://swagger.io/resources/open-api/
+host: localhost:8001
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is a sample server celler server.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Swagger Example API
+  version: "1.0"
+paths:
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: userPayload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/requestmodel.Register'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responsemodel.Auth'
+      summary: Register user
+      tags:
+      - auth
+  /users:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - in: query
+        name: limit
+        type: integer
+      - in: query
+        name: page
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responsemodel.UserAll'
+      summary: List user
+      tags:
+      - users
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: userPayload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/requestmodel.UserCreate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responsemodel.Upsert'
+      summary: Create user
+      tags:
+      - users
+  /users/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: userId
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responsemodel.UserDetail'
+      summary: Detail user
+      tags:
+      - users
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: userId
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: userPayload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/requestmodel.UserUpdate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responsemodel.Upsert'
+      summary: Update user
+      tags:
+      - users
+  /users/{id}/status:
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: userId
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: userPayload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/requestmodel.UserChangeStatus'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responsemodel.Upsert'
+      summary: Change Status User
+      tags:
+      - users
+securityDefinitions:
+  BasicAuth:
+    type: basic
+swagger: "2.0"

@@ -17,8 +17,8 @@ func (m Register) Validate() error {
 	return validation.ValidateStruct(&m,
 		validation.Field(&m.Username, validation.Required.Error(constant.ErrEmptyUsername)),
 		validation.Field(&m.Password, validation.Required.Error(constant.ErrEmptyPassword)),
-		validation.Field(&m.Phone, validation.Required.Error(constant.ErrEmptyPassword)),
-		validation.Field(&m.Email, validation.Required.Error(constant.ErrEmptyPassword)),
+		validation.Field(&m.Phone, validation.Required.Error(constant.ErrEmptyPhone)),
+		validation.Field(&m.Email, validation.Required.Error(constant.ErrEmptyEmail)),
 	)
 }
 

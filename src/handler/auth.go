@@ -19,6 +19,15 @@ func Auth() AuthInterface {
 	return AuthImpl{}
 }
 
+// Register godoc
+//
+//	@Summary		Register user
+//	@Tags			auth
+//	@Accept			json
+//	@Produce		json
+//	@Param			payload	body		requestmodel.Register	true	"userPayload"
+//	@Success		200		{object}	 responsemodel.Auth
+//	@Router			/auth/register [post]
 func (a AuthImpl) Register(c *gin.Context) {
 	var (
 		ctx     = gincontext.GetContext(c)
