@@ -3,38 +3,30 @@ package main
 import (
 	_ "gin-base/docs"
 	"gin-base/src/server"
+	"log"
+	"os"
+
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	swaggerFiles "github.com/swaggo/files"
-	"github.com/swaggo/gin-swagger"
-	"log"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-// @title           Swagger Example API
-// @version         1.0
-// @description     This is a sample server celler server.
-// @termsOfService  http://swagger.io/terms/
+// @title           			Golang Project
+// @version         			1.0
 
-// @contact.name   Bui Phu An
-// @contact.github
-// @contact.email  support@swagger.io
-
-// @license.name  Apache 2.0
-// @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
-
-// @host      localhost:8001
-// @BasePath  /api/v1
-
-// @securityDefinitions.basic  BasicAuth
-
-// @externalDocs.description  OpenAPI
-// @externalDocs.url          https://swagger.io/resources/open-api/
+// @contact.name    			Bui Phu An
+// @contact.github 				https://github.com/buiphuan0211
+// @contact.linked 				https://www.linkedin.com/in/buiphuan/
+// @host      					localhost:8000
+// @BasePath  					/api/v1
+// @securityDefinitions.basic  	BasicAuth
 func main() {
 	r := gin.Default()
 
 	r.Use(gin.Recovery())
 
-	err := godotenv.Load("src/.env")
+	err := godotenv.Load(".env.local")
 	if err != nil {
 		log.Fatalf("Some error occured. Err: %s", err)
 	}
@@ -44,5 +36,5 @@ func main() {
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-	r.Run(":8000")
+	r.Run(os.Getenv("APP_PORT"))
 }

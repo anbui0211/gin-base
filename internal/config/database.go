@@ -20,8 +20,6 @@ func ConnectDBEcommerce() {
 	port := 5432
 	sslMode := "disable"
 
-	fmt.Println(host, username, password, database, port, sslMode)
-
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%d sslmode=%s", host, username, password, database, port, sslMode)
 
 	conn, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
@@ -31,5 +29,6 @@ func ConnectDBEcommerce() {
 		panic(err)
 	}
 	log.Println("CONNECT POSTGRESQL DATABASE SUCCESSFUL ... 🚀")
+
 	db = conn
 }
