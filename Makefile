@@ -14,7 +14,6 @@ migrations-up:
 
 # make migrations-down num=1
 migrations-down:
-	export POSTGRESQL_URL=postgres://anbui:12
 	@migrate -database ${POSTGRESQL_URL} -path internal/models/pg/migrations down $(num)
 
 
