@@ -4,8 +4,10 @@ import (
 	_ "gin-base/docs"
 	"gin-base/src/server"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 	swaggerFiles "github.com/swaggo/files"
 	"github.com/swaggo/gin-swagger"
+	"log"
 )
 
 // @title           Swagger Example API
@@ -32,9 +34,15 @@ func main() {
 
 	r.Use(gin.Recovery())
 
+	err := godotenv.Load("src/.env")
+	if err != nil {
+		log.Fatalf("Some error occured. Err: %s", err)
+	}
+
 	// Initialize
 	server.Bootstrap(r)
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	r.Run(":8001")
+
+	r.Run(":8000")
 }

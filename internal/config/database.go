@@ -12,17 +12,20 @@ import (
 var db *gorm.DB
 
 func ConnectDBEcommerce() {
-	const (
-		//HOST     = "localhost"
-		USER     = "anbui"
-		PASSWORD = "1234"
-		DB_NAME  = "pg-test"
-		PORT     = 5432
-	)
-	HOST := os.Getenv("POSTGRES_HOST")
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%d sslmode=disable TimeZone=Asia/Shanghai", HOST, USER, PASSWORD, DB_NAME, PORT)
-	fmt.Println("dns: ", dsn)
+
+	host := os.Getenv("POSTGRES_HOST")
+	username := os.Getenv("POSTGRES_USER")
+	password := os.Getenv("POSTGRES_PASSWORD")
+	database := os.Getenv("POSTGRES_DB")
+	port := 5432
+	sslMode := "disable"
+
+	fmt.Println(host, username, password, database, port, sslMode)
+
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%d sslmode=%s", host, username, password, database, port, sslMode)
+
 	conn, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+
 	if err != nil {
 		log.Println("CONNECT POSTGRESQL DATABASE FAIL ... ❗️❗")
 		panic(err)
