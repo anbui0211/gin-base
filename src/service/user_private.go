@@ -37,6 +37,7 @@ func (s userImpl) brief(ctx context.Context, user pgmodel.User) responsemodel.Us
 	}
 }
 
+// detail ...
 func (s userImpl) detail(ctx context.Context, user pgmodel.User) *responsemodel.UserDetail {
 	return &responsemodel.UserDetail{
 		ID:        user.ID.String(),

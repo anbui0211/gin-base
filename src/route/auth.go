@@ -3,6 +3,7 @@ package route
 import (
 	"gin-base/src/handler"
 	routevalidation "gin-base/src/route/validation"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -14,6 +15,7 @@ func auth(r *gin.RouterGroup) {
 	)
 
 	g.POST("/register", v.Register(), h.Register)
-	//g.POST("/login", v.Register(), h.Login)
+
+	g.POST("/login", v.Login(), h.Login)
 
 }

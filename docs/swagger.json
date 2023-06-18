@@ -10,6 +10,39 @@
     "host": "localhost:8000",
     "basePath": "/api/v1",
     "paths": {
+        "/auth/login": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Register user",
+                "parameters": [
+                    {
+                        "description": "loginPayload",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requestmodel.Login"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responsemodel.Auth"
+                        }
+                    }
+                }
+            }
+        },
         "/auth/register": {
             "post": {
                 "consumes": [
@@ -24,7 +57,7 @@
                 "summary": "Register user",
                 "parameters": [
                     {
-                        "description": "userPayload",
+                        "description": "registerPayload",
                         "name": "payload",
                         "in": "body",
                         "required": true,
@@ -219,6 +252,17 @@
         }
     },
     "definitions": {
+        "requestmodel.Login": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
         "requestmodel.Register": {
             "type": "object",
             "properties": {

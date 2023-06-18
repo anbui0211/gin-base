@@ -1,5 +1,5 @@
 #!bin/bash
-export POSTGRESQL_URL=postgres://anbui:1234@localhost:5432/pg-test?sslmode=disable
+export POSTGRESQL_URL=postgres://anbui:1234@localhost:5432/pgtest?sslmode=disable
 
 make run:
 	@go run cmd/myapp/main.go

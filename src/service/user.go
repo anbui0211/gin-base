@@ -5,7 +5,7 @@ import (
 	"gin-base/internal/config"
 	pgmodel "gin-base/internal/models/pg"
 	querymodel "gin-base/src/model/query"
-	"gin-base/src/model/request"
+	requestmodel "gin-base/src/model/request"
 	responsemodel "gin-base/src/model/response"
 	"sync"
 	"time"
@@ -25,7 +25,7 @@ func User() UserInterface {
 	return userImpl{}
 }
 
-func (u userImpl) Create(ctx context.Context, user requestmodel.UserCreate) (res responsemodel.Upsert, err error) {
+func (s userImpl) Create(ctx context.Context, user requestmodel.UserCreate) (res responsemodel.Upsert, err error) {
 	var (
 		db        = config.UserCol()
 		userModel = user.ConvertToUserModel()
@@ -78,14 +78,17 @@ func (s userImpl) All(ctx context.Context, q querymodel.UserAll) (res responsemo
 	return
 }
 
-func (u userImpl) Detail(ctx context.Context, id string) (res *responsemodel.UserDetail, err error) {
+func (s userImpl) Detail(ctx context.Context, id string) (res *responsemodel.UserDetail, err error) {
 	var (
-		db = config.UserCol()
+		db   = config.UserCol()
+		user pgmodel.User
 	)
-	if err = db.Where("id = ?", id).First(&res).Error; err != nil {
+
+	if err = db.Where("id = ?", id).First(&user).Error; err != nil {
 		return
 	}
 
+	res = s.detail(ctx, user)
 	return
 }
 

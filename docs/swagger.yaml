@@ -1,5 +1,12 @@
 basePath: /api/v1
 definitions:
+  requestmodel.Login:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
   requestmodel.Register:
     properties:
       email:
@@ -89,12 +96,33 @@ info:
   title: Golang Project
   version: "1.0"
 paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: loginPayload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/requestmodel.Login'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responsemodel.Auth'
+      summary: Register user
+      tags:
+      - auth
   /auth/register:
     post:
       consumes:
       - application/json
       parameters:
-      - description: userPayload
+      - description: registerPayload
         in: body
         name: payload
         required: true

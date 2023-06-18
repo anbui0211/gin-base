@@ -9,13 +9,11 @@ import (
 	pgmodel "gin-base/internal/models/pg"
 	requestmodel "gin-base/src/model/request"
 	responsemodel "gin-base/src/model/response"
-	"github.com/google/uuid"
-	"log"
-	"time"
 )
 
 type AuthInterface interface {
 	Register(ctx context.Context, payload requestmodel.Register) (*responsemodel.Auth, error)
+	Login(ctx context.Context, payload requestmodel.Login) (*responsemodel.Auth, error)
 }
 
 type authImpl struct{}
@@ -27,25 +25,25 @@ func Auth() AuthInterface {
 func (s authImpl) Register(ctx context.Context, payload requestmodel.Register) (*responsemodel.Auth, error) {
 	var db = config.UserCol()
 
+	// Check user exist
 	if isExisted := s.isExistedUser(ctx, payload.Username); isExisted {
 		return nil, errors.New(constant.ErrAlreadyExistUsername)
 	}
 
-	newUser := pgmodel.User{
-		PgModel: pgmodel.PgModel{
-			ID:        uuid.New(),
-			Status:    constant.StatusInactive,
-			CreatedAt: time.Now(),
-			UpdatedAt: time.Now(),
-		},
-		Username: payload.Username,
-		Password: payload.Password,
+	newUser := payload.ConvertToModel()
+
+	// Hash password
+	hashPass, err := authinternal.HashPassword(newUser.Password)
+	if err != nil {
+		return nil, errors.New(constant.ErrAuthHashPassword)
 	}
+	newUser.Password = hashPass
 
 	if err := db.Create(&newUser).Error; err != nil {
 		return nil, err
 	}
 
+	// generate token
 	token, err := authinternal.GenerateToken(authinternal.User{
 		ID:   newUser.ID.String(),
 		Name: newUser.Name,
@@ -60,18 +58,29 @@ func (s authImpl) Register(ctx context.Context, payload requestmodel.Register) (
 	}, nil
 }
 
-func (s authImpl) isExistedUser(ctx context.Context, username string) bool {
+func (s authImpl) Login(ctx context.Context, payload requestmodel.Login) (*responsemodel.Auth, error) {
+
 	var (
 		db   = config.UserCol()
 		user pgmodel.User
 	)
 
-	// Check invalid user
-	err := db.Where("username = ?", username).First(&user).Error
-	if err != nil && err.Error() == "record not found" {
-		log.Println("[Auth - isExistedUser] - err: ", err)
-		return false
+	if err := db.Where("username = ?", payload.Username).First(&user).Error; err != nil {
+		return nil, errors.New(constant.ErrUsernameNotExist)
 	}
 
-	return true
+	if err := authinternal.ComparePassword(user.Password, payload.Password); err != nil {
+		return nil, errors.New(constant.ErrAuthInvalidPassword)
+	}
+
+	token, err := authinternal.GenerateToken(authinternal.User{
+		ID:   user.ID.String(),
+		Name: user.Name,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &responsemodel.Auth{Token: token}, nil
 }

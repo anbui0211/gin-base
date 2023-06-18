@@ -1,9 +1,10 @@
 package response
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"strings"
+
+	"github.com/gin-gonic/gin"
 )
 
 func R400(c *gin.Context, data interface{}, err error) {

@@ -7,6 +7,7 @@ import (
 	requestmodel "gin-base/src/model/request"
 	responsemodel "gin-base/src/model/response"
 	"gin-base/src/service"
+
 	"github.com/gin-gonic/gin"
 )
 
