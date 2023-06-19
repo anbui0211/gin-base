@@ -9,16 +9,19 @@ go install github.com/swaggo/swag/cmd/swag@latest
 https://github.com/swaggo/swag#declarative-comments-format
 ```
 
-- Update submodules
+- Docker 
 ```shell
-# make update-submodules branch={branch_name}
-make update-submodules branch=develop
+# Initialize database and server 
+docker compose up -d 
 ```
 
-- Run server admin
+- Migrate 
 ```shell
-make run-admin
+# Create table and insert rows in database
+make migrations-up
 ```
 
-
-go mod edit -replace git.selly.red/Selly-Modules/3pl=/Users/sinh/Documents/dev/selly-module/3pl
+- Run server 
+```shell
+make run-app
+```
