@@ -7,6 +7,10 @@ go install github.com/swaggo/swag/cmd/swag@latest
 
 # document
 https://github.com/swaggo/swag#declarative-comments-format
+
+# Swagger app after run app
+http://localhost:8001/swagger/index.html
+
 ```
 
 - Docker 
@@ -25,3 +29,4 @@ make migrations-up
 ```shell
 make run-app
 ```
+
