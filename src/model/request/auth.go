@@ -2,7 +2,7 @@ package requestmodel
 
 import (
 	"gin-base/internal/constant"
-	pgmodel "gin-base/internal/models/pg"
+	pgmodel "gin-base/internal/models"
 	"time"
 
 	validation "github.com/go-ozzo/ozzo-validation"

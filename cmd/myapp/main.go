@@ -18,7 +18,7 @@ import (
 // @contact.name    			Bui Phu An
 // @contact.github 				https://github.com/buiphuan0211
 // @contact.linked 				https://www.linkedin.com/in/buiphuan/
-// @host      					localhost:8000
+// @host      					localhost:8001
 // @BasePath  					/api/v1
 // @securityDefinitions.basic  	BasicAuth
 func main() {

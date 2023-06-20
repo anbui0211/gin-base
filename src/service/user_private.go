@@ -2,7 +2,7 @@ package service
 
 import (
 	"context"
-	pgmodel "gin-base/internal/models/pg"
+	pgmodel "gin-base/internal/models"
 	responsemodel "gin-base/src/model/response"
 	"sync"
 )

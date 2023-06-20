@@ -2,11 +2,12 @@ package requestmodel
 
 import (
 	"gin-base/internal/constant"
-	pgmodel "gin-base/internal/models/pg"
+	pgmodel "gin-base/internal/models"
 	updatemodel "gin-base/src/model/update"
+	"time"
+
 	validation "github.com/go-ozzo/ozzo-validation"
 	"github.com/google/uuid"
-	"time"
 )
 
 type UserCreate struct {

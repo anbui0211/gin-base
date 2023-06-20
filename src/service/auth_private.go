@@ -2,14 +2,14 @@ package service
 
 import (
 	"context"
-	"gin-base/internal/config"
-	pgmodel "gin-base/internal/models/pg"
+	pgmodel "gin-base/internal/models"
+	"gin-base/src/database"
 	"log"
 )
 
 func (s authImpl) isExistedUser(ctx context.Context, username string) bool {
 	var (
-		db   = config.UserCol()
+		db   = database.UserCol()
 		user pgmodel.User
 	)
 

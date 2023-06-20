@@ -4,9 +4,10 @@ import (
 	"context"
 	"errors"
 	authinternal "gin-base/internal/auth"
-	"gin-base/internal/config"
+
 	"gin-base/internal/constant"
-	pgmodel "gin-base/internal/models/pg"
+	pgmodel "gin-base/internal/models"
+	"gin-base/src/database"
 	requestmodel "gin-base/src/model/request"
 	responsemodel "gin-base/src/model/response"
 )
@@ -23,7 +24,7 @@ func Auth() AuthInterface {
 }
 
 func (s authImpl) Register(ctx context.Context, payload requestmodel.Register) (*responsemodel.Auth, error) {
-	var db = config.UserCol()
+	var db = database.UserCol()
 
 	// Check user exist
 	if isExisted := s.isExistedUser(ctx, payload.Username); isExisted {
@@ -61,7 +62,7 @@ func (s authImpl) Register(ctx context.Context, payload requestmodel.Register) (
 func (s authImpl) Login(ctx context.Context, payload requestmodel.Login) (*responsemodel.Auth, error) {
 
 	var (
-		db   = config.UserCol()
+		db   = database.UserCol()
 		user pgmodel.User
 	)
 

@@ -2,8 +2,8 @@ package service
 
 import (
 	"context"
-	"gin-base/internal/config"
-	pgmodel "gin-base/internal/models/pg"
+	pgmodel "gin-base/internal/models"
+	"gin-base/src/database"
 	querymodel "gin-base/src/model/query"
 	requestmodel "gin-base/src/model/request"
 	responsemodel "gin-base/src/model/response"
@@ -27,7 +27,7 @@ func User() UserInterface {
 
 func (s userImpl) Create(ctx context.Context, user requestmodel.UserCreate) (res responsemodel.Upsert, err error) {
 	var (
-		db        = config.UserCol()
+		db        = database.UserCol()
 		userModel = user.ConvertToUserModel()
 	)
 
@@ -40,6 +40,11 @@ func (s userImpl) Create(ctx context.Context, user requestmodel.UserCreate) (res
 }
 
 func (s userImpl) All(ctx context.Context, q querymodel.UserAll) (res responsemodel.UserAll) {
+	var (
+		users []pgmodel.User
+		db    = database.UserCol()
+		wg    = sync.WaitGroup{}
+	)
 
 	offset := int((q.Page - 1) * q.Limit)
 	limit := int(q.Limit)
@@ -47,15 +52,9 @@ func (s userImpl) All(ctx context.Context, q querymodel.UserAll) (res responsemo
 		limit = 5
 	}
 
-	var (
-		users []pgmodel.User
-		db    = config.UserCol()
-	)
 	if err := db.Limit(limit).Offset(offset).Find(&users).Error; err != nil {
 		return
 	}
-
-	var wg = sync.WaitGroup{}
 
 	wg.Add(1)
 	var count int64
@@ -80,7 +79,7 @@ func (s userImpl) All(ctx context.Context, q querymodel.UserAll) (res responsemo
 
 func (s userImpl) Detail(ctx context.Context, id string) (res *responsemodel.UserDetail, err error) {
 	var (
-		db   = config.UserCol()
+		db   = database.UserCol()
 		user pgmodel.User
 	)
 
@@ -95,7 +94,7 @@ func (s userImpl) Detail(ctx context.Context, id string) (res *responsemodel.Use
 func (u userImpl) Update(ctx context.Context, id string, payload requestmodel.UserUpdate) (res responsemodel.Upsert, err error) {
 	userUpdate := payload.ConvertToUserModel()
 
-	var db = config.UserCol()
+	var db = database.UserCol()
 	if err = db.Where("id = ?", id).Updates(&userUpdate).Error; err != nil {
 		return
 	}
@@ -109,7 +108,7 @@ func (u userImpl) ChangeStatus(ctx context.Context, id string, payload requestmo
 		"status":     payload.Status,
 		"created_at": time.Now(),
 	}
-	var db = config.UserCol()
+	var db = database.UserCol()
 	if err = db.Where("id = ?", id).Updates(&statusUpdate).Error; err != nil {
 		return
 	}

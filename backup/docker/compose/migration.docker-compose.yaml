@@ -1,6 +1,6 @@
 version: '3.8'
 services:
-  postgres-db:
+  db:
     image: postgres:9.5
     container_name: postgres
     restart: always
@@ -32,7 +32,7 @@ services:
       - '8001:8001'
     restart: always
     depends_on:
-      - postgres-db
+      - db
     networks:
       - network
 
@@ -52,7 +52,7 @@ services:
       ]
     command: ["up"]
     depends_on:
-      - postgres-db
+      - db
     restart: on-failure
     networks:
       - network

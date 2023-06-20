@@ -1,9 +1,7 @@
 package initialize
 
-import (
-	"gin-base/internal/config"
-)
+import "gin-base/src/database"
 
 func mySQL() {
-	config.ConnectDBEcommerce()
+	database.ConnectDBEcommerce()
 }

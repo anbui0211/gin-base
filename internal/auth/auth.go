@@ -4,8 +4,9 @@ import (
 	"errors"
 	"fmt"
 	"gin-base/internal/constant"
-	"github.com/dgrijalva/jwt-go"
 	"time"
+
+	"github.com/dgrijalva/jwt-go"
 )
 
 var jwtSecret = []byte("your_jwt_secret_key")

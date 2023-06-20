@@ -1,32 +1,53 @@
-# server-warehouse
+# gin-server
 
-- Install swag
+- Swaggger
+
 ```shell
-# https://github.com/swaggo/echo-swagger
-go install github.com/swaggo/swag/cmd/swag@latest
-
-# document
-https://github.com/swaggo/swag#declarative-comments-format
-
 # Swagger app after run app
 http://localhost:8001/swagger/index.html
-
 ```
 
-- Docker 
+- Docker
+
 ```shell
-# Initialize database and server 
-docker compose up -d 
+# Run server in docker
+docker compose up -d
+
+# Exec container server
+docker exec -it backend sh
+
+# Check log server realtime
+docker logs -f backend
 ```
 
-- Migrate 
-```shell
-# Create table and insert rows in database
-make migrations-up
-```
+- Run app local
 
-- Run server 
 ```shell
+# Run server
 make run-app
+
+# migrate to database: create table and insert rows
+make migrations-up
+
+# Reverting the changes made to the previous state
+make migrations-down
 ```
 
+- Document
+
+```shell
+# Framework go
+https://gin-gonic.com/
+
+# ORM library for Golang
+https://gorm.io/
+
+# Swag
+https://github.com/swaggo/swag
+
+# Validate
+https://github.com/go-ozzo/ozzo-validation
+
+# Migration
+https://www.freecodecamp.org/news/database-migration-golang-migrate/
+```
