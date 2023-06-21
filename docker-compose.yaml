@@ -1,6 +1,6 @@
 version: '3.8'
 services:
-  postgres-db:
+  db:
     image: postgres:9.5
     container_name: postgres
     restart: always
@@ -14,25 +14,6 @@ services:
       - "5432:5432"
     volumes:
       - ./data/pgsql:/var/lib/postgresql/data
-    networks:
-      - network
-
-  backend:
-    build:
-      context: .
-      dockerfile: ./cmd/myapp/Dockerfile
-    container_name: backend
-    environment:
-      POSTGRES_HOST: postgres
-      POSTGRES_USER: anbui
-      POSTGRES_PASSWORD: 1234
-      POSTGRES_DB: pgtest
-      POSTGRES_PORT: 5432
-    ports:
-      - '8001:8001'
-    restart: always
-    depends_on:
-      - postgres-db
     networks:
       - network
 
@@ -52,9 +33,29 @@ services:
       ]
     command: ["up"]
     depends_on:
-      - postgres-db
+      - db
     restart: on-failure
     networks:
       - network
+
+  backend:
+    build:
+      context: .
+      dockerfile: ./cmd/myapp/Dockerfile
+    container_name: backend
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_USER: anbui
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: pgtest
+      POSTGRES_PORT: 5432
+    ports:
+      - '8001:8001'
+    restart: always
+    depends_on:
+      - db 
+    networks:
+      - network
+
 networks:
   network:
