@@ -16,26 +16,6 @@ services:
       - ./data/pgsql:/var/lib/postgresql/data
     networks:
       - network
-
-  backend:
-    build:
-      context: .
-      dockerfile: ./cmd/myapp/Dockerfile
-    container_name: backend
-    environment:
-      POSTGRES_HOST: postgres
-      POSTGRES_USER: anbui
-      POSTGRES_PASSWORD: 1234
-      POSTGRES_DB: pgtest
-      POSTGRES_PORT: 5432
-    ports:
-      - '8001:8001'
-    restart: always
-    depends_on:
-      - db
-    networks:
-      - network
-
   migrate:
     image: migrate/migrate:v4.15.2
     container_name: migrate
@@ -56,5 +36,26 @@ services:
     restart: on-failure
     networks:
       - network
+
+  backend:
+    build:
+      context: .
+      dockerfile: ./cmd/myapp/Dockerfile
+    container_name: backend
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_USER: anbui
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: pgtest
+      POSTGRES_PORT: 5432
+    ports:
+      - '8001:8001'
+    restart: always
+    depends_on:
+      - db
+    networks:
+      - network
+      
 networks:
   network:
+

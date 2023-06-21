@@ -14,6 +14,11 @@ services:
       - "5432:5432"
     volumes:
       - ./data/pgsql:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "anbui", "-d", "pgtest"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
     networks:
       - network
 
@@ -53,7 +58,8 @@ services:
       - '8001:8001'
     restart: always
     depends_on:
-      - db 
+      db:
+        condition: service_healthy
     networks:
       - network
 
