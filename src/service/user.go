@@ -2,7 +2,8 @@ package service
 
 import (
 	"context"
-	pgmodel "gin-base/internal/models"
+	"errors"
+	"gin-base/src/dao"
 	"gin-base/src/database"
 	querymodel "gin-base/src/model/query"
 	requestmodel "gin-base/src/model/request"
@@ -14,8 +15,8 @@ import (
 type UserInterface interface {
 	Create(ctx context.Context, user requestmodel.UserCreate) (res responsemodel.Upsert, err error)
 	All(c context.Context, q querymodel.UserAll) (res responsemodel.UserAll)
-	Detail(ctx context.Context, id string) (res *responsemodel.UserDetail, err error)
-	Update(ctx context.Context, id string, payload requestmodel.UserUpdate) (res responsemodel.Upsert, err error)
+	Detail(ctx context.Context, id string) (res responsemodel.UserDetail, err error)
+	Update(ctx context.Context, id string, payload requestmodel.UserUpdate) (res *responsemodel.Upsert, err error)
 	ChangeStatus(ctx context.Context, id string, payload requestmodel.UserChangeStatus) (res responsemodel.Upsert, err error)
 }
 
@@ -25,6 +26,7 @@ func User() UserInterface {
 	return userImpl{}
 }
 
+// Create ...
 func (s userImpl) Create(ctx context.Context, user requestmodel.UserCreate) (res responsemodel.Upsert, err error) {
 	var (
 		db        = database.UserCol()
@@ -39,51 +41,39 @@ func (s userImpl) Create(ctx context.Context, user requestmodel.UserCreate) (res
 	return
 }
 
+// All ...
 func (s userImpl) All(ctx context.Context, q querymodel.UserAll) (res responsemodel.UserAll) {
+
 	var (
-		users []pgmodel.User
-		db    = database.UserCol()
-		wg    = sync.WaitGroup{}
+		wg = sync.WaitGroup{}
+		d  = dao.User()
 	)
 
-	offset := int((q.Page - 1) * q.Limit)
-	limit := int(q.Limit)
-	if limit <= 0 {
-		limit = 5
-	}
-
-	if err := db.Limit(limit).Offset(offset).Find(&users).Error; err != nil {
-		return
-	}
-
 	wg.Add(1)
-	var count int64
 	go func() {
 		defer wg.Done()
-		db.Count(&count)
+		users := d.All(ctx, q)
+		res.List = s.getListUser(ctx, users)
 	}()
 
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		res.List = s.getListUser(ctx, users)
+		res.Total = d.Count(ctx)
 	}()
 
 	wg.Wait()
 
-	res.Total = count
-	res.Limit = int64(limit)
+	res.Limit = q.Limit
 
 	return
 }
 
-func (s userImpl) Detail(ctx context.Context, id string) (res *responsemodel.UserDetail, err error) {
-	var (
-		db   = database.UserCol()
-		user pgmodel.User
-	)
-
-	if err = db.Where("id = ?", id).First(&user).Error; err != nil {
+// Detail ...
+func (s userImpl) Detail(ctx context.Context, id string) (res responsemodel.UserDetail, err error) {
+	var d = dao.User()
+	user, err := d.Detail(ctx, id)
+	if err != nil {
 		return
 	}
 
@@ -91,28 +81,33 @@ func (s userImpl) Detail(ctx context.Context, id string) (res *responsemodel.Use
 	return
 }
 
-func (u userImpl) Update(ctx context.Context, id string, payload requestmodel.UserUpdate) (res responsemodel.Upsert, err error) {
-	userUpdate := payload.ConvertToUserModel()
+// Update ...
+func (u userImpl) Update(ctx context.Context, id string, payload requestmodel.UserUpdate) (res *responsemodel.Upsert, err error) {
+	var (
+		d          = dao.User()
+		userUpdate = payload.ConvertToUserModel()
+	)
 
-	var db = database.UserCol()
-	if err = db.Where("id = ?", id).Updates(&userUpdate).Error; err != nil {
-		return
+	if err = d.Update(ctx, id, userUpdate); err != nil {
+		return nil, errors.New("error when change user")
+
 	}
 
 	res.ID = id
 	return
 }
 
+// ChangeStatus ...
 func (u userImpl) ChangeStatus(ctx context.Context, id string, payload requestmodel.UserChangeStatus) (res responsemodel.Upsert, err error) {
 	statusUpdate := map[string]interface{}{
 		"status":     payload.Status,
 		"created_at": time.Now(),
 	}
-	var db = database.UserCol()
-	if err = db.Where("id = ?", id).Updates(&statusUpdate).Error; err != nil {
+
+	d := dao.User()
+	if err = d.ChangeStatus(ctx, id, statusUpdate); err != nil {
+		err = errors.New("error when change user")
 		return
 	}
-
-	res.ID = id
 	return
 }

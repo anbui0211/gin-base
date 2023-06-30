@@ -23,6 +23,7 @@ func Auth() AuthInterface {
 	return authImpl{}
 }
 
+// Register ...
 func (s authImpl) Register(ctx context.Context, payload requestmodel.Register) (*responsemodel.Auth, error) {
 	var db = database.UserCol()
 
@@ -59,8 +60,8 @@ func (s authImpl) Register(ctx context.Context, payload requestmodel.Register) (
 	}, nil
 }
 
+// Login ...
 func (s authImpl) Login(ctx context.Context, payload requestmodel.Login) (*responsemodel.Auth, error) {
-
 	var (
 		db   = database.UserCol()
 		user pgmodel.User

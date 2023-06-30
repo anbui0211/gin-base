@@ -3,7 +3,6 @@ package requestmodel
 import (
 	"gin-base/internal/constant"
 	pgmodel "gin-base/internal/models"
-	updatemodel "gin-base/src/model/update"
 	"time"
 
 	validation "github.com/go-ozzo/ozzo-validation"
@@ -47,11 +46,13 @@ func (m UserUpdate) Validate() error {
 	)
 }
 
-func (m UserUpdate) ConvertToUserModel() updatemodel.UserUpdate {
-	return updatemodel.UserUpdate{
-		Name:      m.Name,
-		Email:     m.Email,
-		UpdatedAt: time.Now(),
+func (m UserUpdate) ConvertToUserModel() pgmodel.User {
+	return pgmodel.User{
+		PgModel: pgmodel.PgModel{
+			UpdatedAt: time.Now(),
+		},
+		Name:  m.Name,
+		Email: m.Email,
 	}
 }
 

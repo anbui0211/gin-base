@@ -45,7 +45,7 @@ func (a authImpl) Register(c *gin.Context) {
 	response.R200(c, gin.H{"token": res.Token}, "")
 }
 
-// Register godoc
+// Login godoc
 //
 //	@Summary		Register user
 //	@Tags			auth
