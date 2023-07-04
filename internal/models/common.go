@@ -5,7 +5,7 @@ import (
 )
 
 type PgModel struct {
-	ID        int       `gorm:"column:id;auto_increment;primary_key;not null"`
+	ID        string    `gorm:"column:id"`
 	Status    string    `gorm:"column:status;not null;"`
 	CreatedAt time.Time `gorm:"column:created_at"`
 	UpdatedAt time.Time `gorm:"column:updated_at"`

@@ -38,7 +38,7 @@ func (s userImpl) Create(ctx context.Context, user requestmodel.UserCreate) (res
 		return
 	}
 
-	res.ID = userModel.UserID
+	res.ID = userModel.ID
 	return
 }
 
@@ -98,7 +98,7 @@ func (u userImpl) Update(ctx context.Context, id string, payload requestmodel.Us
 		return nil, errors.New("error when change user")
 	}
 
-	res.ID = user.UserID
+	res.ID = user.ID
 	return
 }
 
@@ -122,6 +122,6 @@ func (u userImpl) ChangeStatus(ctx context.Context, id string, payload requestmo
 		return
 	}
 
-	res.ID = user.UserID
+	res.ID = user.ID
 	return
 }

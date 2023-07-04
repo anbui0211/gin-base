@@ -1,5 +1,5 @@
 CREATE TABLE products (
-    id SERIAL PRIMARY KEY,
+    id VARCHAR(255) PRIMARY KEY NOT NULL ,
     product_id VARCHAR(255) NOT NULL,
     name VARCHAR(100) NOT NULL,
     search_string VARCHAR(100) NOT NULL,

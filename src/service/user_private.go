@@ -29,7 +29,7 @@ func (s userImpl) getListUser(ctx context.Context, users []pgmodel.User) []respo
 // brief
 func (s userImpl) brief(ctx context.Context, u pgmodel.User) responsemodel.UserBrief {
 	return responsemodel.UserBrief{
-		ID:        u.UserID,
+		ID:        u.ID,
 		Name:      u.Name,
 		Status:    u.Status,
 		CreatedAt: u.CreatedAt,
@@ -40,7 +40,7 @@ func (s userImpl) brief(ctx context.Context, u pgmodel.User) responsemodel.UserB
 // detail ...
 func (s userImpl) detail(ctx context.Context, u pgmodel.User) responsemodel.UserDetail {
 	return responsemodel.UserDetail{
-		ID:        u.UserID,
+		ID:        u.ID,
 		Name:      u.Name,
 		Email:     u.Email,
 		Status:    u.Status,

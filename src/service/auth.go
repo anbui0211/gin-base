@@ -47,7 +47,7 @@ func (s authImpl) Register(ctx context.Context, payload requestmodel.Register) (
 
 	// generate token
 	token, err := authinternal.GenerateToken(authinternal.User{
-		ID:   newUser.UserID,
+		ID:   newUser.ID,
 		Name: newUser.Name,
 	})
 
@@ -76,7 +76,7 @@ func (s authImpl) Login(ctx context.Context, payload requestmodel.Login) (*respo
 	}
 
 	token, err := authinternal.GenerateToken(authinternal.User{
-		ID:   user.UserID,
+		ID:   user.ID,
 		Name: user.Name,
 	})
 

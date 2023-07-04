@@ -9,8 +9,7 @@ import (
 
 // User represents a row from 'public.users'.
 type User struct {
-	ID        int       `json:"id"`         // id
-	UserID    string    `json:"user_id"`    // user_id
+	ID        string    `json:"id"`         // id
 	Name      string    `json:"name"`       // name
 	Email     string    `json:"email"`      // email
 	Username  string    `json:"username"`   // username
@@ -42,15 +41,15 @@ func (u *User) Insert(ctx context.Context, db DB) error {
 	case u._deleted: // deleted
 		return logerror(&ErrInsertFailed{ErrMarkedForDeletion})
 	}
-	// insert (primary key generated and returned by database)
+	// insert (manual)
 	const sqlstr = `INSERT INTO public.users (` +
-		`user_id, name, email, username, password, status, phone, created_at, updated_at` +
+		`id, name, email, username, password, status, phone, created_at, updated_at` +
 		`) VALUES (` +
 		`$1, $2, $3, $4, $5, $6, $7, $8, $9` +
-		`) RETURNING id`
+		`)`
 	// run
-	logf(sqlstr, u.UserID, u.Name, u.Email, u.Username, u.Password, u.Status, u.Phone, u.CreatedAt, u.UpdatedAt)
-	if err := db.QueryRowContext(ctx, sqlstr, u.UserID, u.Name, u.Email, u.Username, u.Password, u.Status, u.Phone, u.CreatedAt, u.UpdatedAt).Scan(&u.ID); err != nil {
+	logf(sqlstr, u.ID, u.Name, u.Email, u.Username, u.Password, u.Status, u.Phone, u.CreatedAt, u.UpdatedAt)
+	if _, err := db.ExecContext(ctx, sqlstr, u.ID, u.Name, u.Email, u.Username, u.Password, u.Status, u.Phone, u.CreatedAt, u.UpdatedAt); err != nil {
 		return logerror(err)
 	}
 	// set exists
@@ -68,11 +67,11 @@ func (u *User) Update(ctx context.Context, db DB) error {
 	}
 	// update with composite primary key
 	const sqlstr = `UPDATE public.users SET ` +
-		`user_id = $1, name = $2, email = $3, username = $4, password = $5, status = $6, phone = $7, created_at = $8, updated_at = $9 ` +
-		`WHERE id = $10`
+		`name = $1, email = $2, username = $3, password = $4, status = $5, phone = $6, created_at = $7, updated_at = $8 ` +
+		`WHERE id = $9`
 	// run
-	logf(sqlstr, u.UserID, u.Name, u.Email, u.Username, u.Password, u.Status, u.Phone, u.CreatedAt, u.UpdatedAt, u.ID)
-	if _, err := db.ExecContext(ctx, sqlstr, u.UserID, u.Name, u.Email, u.Username, u.Password, u.Status, u.Phone, u.CreatedAt, u.UpdatedAt, u.ID); err != nil {
+	logf(sqlstr, u.Name, u.Email, u.Username, u.Password, u.Status, u.Phone, u.CreatedAt, u.UpdatedAt, u.ID)
+	if _, err := db.ExecContext(ctx, sqlstr, u.Name, u.Email, u.Username, u.Password, u.Status, u.Phone, u.CreatedAt, u.UpdatedAt, u.ID); err != nil {
 		return logerror(err)
 	}
 	return nil
@@ -94,16 +93,16 @@ func (u *User) Upsert(ctx context.Context, db DB) error {
 	}
 	// upsert
 	const sqlstr = `INSERT INTO public.users (` +
-		`id, user_id, name, email, username, password, status, phone, created_at, updated_at` +
+		`id, name, email, username, password, status, phone, created_at, updated_at` +
 		`) VALUES (` +
-		`$1, $2, $3, $4, $5, $6, $7, $8, $9, $10` +
+		`$1, $2, $3, $4, $5, $6, $7, $8, $9` +
 		`)` +
 		` ON CONFLICT (id) DO ` +
 		`UPDATE SET ` +
-		`user_id = EXCLUDED.user_id, name = EXCLUDED.name, email = EXCLUDED.email, username = EXCLUDED.username, password = EXCLUDED.password, status = EXCLUDED.status, phone = EXCLUDED.phone, created_at = EXCLUDED.created_at, updated_at = EXCLUDED.updated_at `
+		`name = EXCLUDED.name, email = EXCLUDED.email, username = EXCLUDED.username, password = EXCLUDED.password, status = EXCLUDED.status, phone = EXCLUDED.phone, created_at = EXCLUDED.created_at, updated_at = EXCLUDED.updated_at `
 	// run
-	logf(sqlstr, u.ID, u.UserID, u.Name, u.Email, u.Username, u.Password, u.Status, u.Phone, u.CreatedAt, u.UpdatedAt)
-	if _, err := db.ExecContext(ctx, sqlstr, u.ID, u.UserID, u.Name, u.Email, u.Username, u.Password, u.Status, u.Phone, u.CreatedAt, u.UpdatedAt); err != nil {
+	logf(sqlstr, u.ID, u.Name, u.Email, u.Username, u.Password, u.Status, u.Phone, u.CreatedAt, u.UpdatedAt)
+	if _, err := db.ExecContext(ctx, sqlstr, u.ID, u.Name, u.Email, u.Username, u.Password, u.Status, u.Phone, u.CreatedAt, u.UpdatedAt); err != nil {
 		return logerror(err)
 	}
 	// set exists
@@ -135,10 +134,10 @@ func (u *User) Delete(ctx context.Context, db DB) error {
 // UserByID retrieves a row from 'public.users' as a [User].
 //
 // Generated from index 'users_pkey'.
-func UserByID(ctx context.Context, db DB, id int) (*User, error) {
+func UserByID(ctx context.Context, db DB, id string) (*User, error) {
 	// query
 	const sqlstr = `SELECT ` +
-		`id, user_id, name, email, username, password, status, phone, created_at, updated_at ` +
+		`id, name, email, username, password, status, phone, created_at, updated_at ` +
 		`FROM public.users ` +
 		`WHERE id = $1`
 	// run
@@ -146,7 +145,7 @@ func UserByID(ctx context.Context, db DB, id int) (*User, error) {
 	u := User{
 		_exists: true,
 	}
-	if err := db.QueryRowContext(ctx, sqlstr, id).Scan(&u.ID, &u.UserID, &u.Name, &u.Email, &u.Username, &u.Password, &u.Status, &u.Phone, &u.CreatedAt, &u.UpdatedAt); err != nil {
+	if err := db.QueryRowContext(ctx, sqlstr, id).Scan(&u.ID, &u.Name, &u.Email, &u.Username, &u.Password, &u.Status, &u.Phone, &u.CreatedAt, &u.UpdatedAt); err != nil {
 		return nil, logerror(err)
 	}
 	return &u, nil

@@ -30,7 +30,7 @@ func (m Register) Validate() error {
 func (m Register) ConvertToModel() pgmodel.User {
 	return pgmodel.User{
 		PgModel: pgmodel.PgModel{
-			//ID:        uuid.New(),
+			ID:        uuid.New().String(),
 			Status:    "inactive",
 			CreatedAt: time.Now(),
 			UpdatedAt: time.Now(),
@@ -40,7 +40,6 @@ func (m Register) ConvertToModel() pgmodel.User {
 		Name:     m.Name,
 		Phone:    m.Phone,
 		Email:    m.Email,
-		UserID:   uuid.New().String(),
 	}
 
 }

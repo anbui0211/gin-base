@@ -9,7 +9,7 @@ import (
 
 // Product represents a row from 'public.products'.
 type Product struct {
-	ID           int       `json:"id"`            // id
+	ID           string    `json:"id"`            // id
 	ProductID    string    `json:"product_id"`    // product_id
 	Name         string    `json:"name"`          // name
 	SearchString string    `json:"search_string"` // search_string
@@ -42,15 +42,15 @@ func (p *Product) Insert(ctx context.Context, db DB) error {
 	case p._deleted: // deleted
 		return logerror(&ErrInsertFailed{ErrMarkedForDeletion})
 	}
-	// insert (primary key generated and returned by database)
+	// insert (manual)
 	const sqlstr = `INSERT INTO public.products (` +
-		`product_id, name, search_string, category_id, quantity, price, status, created_at, updated_at` +
+		`id, product_id, name, search_string, category_id, quantity, price, status, created_at, updated_at` +
 		`) VALUES (` +
-		`$1, $2, $3, $4, $5, $6, $7, $8, $9` +
-		`) RETURNING id`
+		`$1, $2, $3, $4, $5, $6, $7, $8, $9, $10` +
+		`)`
 	// run
-	logf(sqlstr, p.ProductID, p.Name, p.SearchString, p.CategoryID, p.Quantity, p.Price, p.Status, p.CreatedAt, p.UpdatedAt)
-	if err := db.QueryRowContext(ctx, sqlstr, p.ProductID, p.Name, p.SearchString, p.CategoryID, p.Quantity, p.Price, p.Status, p.CreatedAt, p.UpdatedAt).Scan(&p.ID); err != nil {
+	logf(sqlstr, p.ID, p.ProductID, p.Name, p.SearchString, p.CategoryID, p.Quantity, p.Price, p.Status, p.CreatedAt, p.UpdatedAt)
+	if _, err := db.ExecContext(ctx, sqlstr, p.ID, p.ProductID, p.Name, p.SearchString, p.CategoryID, p.Quantity, p.Price, p.Status, p.CreatedAt, p.UpdatedAt); err != nil {
 		return logerror(err)
 	}
 	// set exists
@@ -135,7 +135,7 @@ func (p *Product) Delete(ctx context.Context, db DB) error {
 // ProductByID retrieves a row from 'public.products' as a [Product].
 //
 // Generated from index 'products_pkey'.
-func ProductByID(ctx context.Context, db DB, id int) (*Product, error) {
+func ProductByID(ctx context.Context, db DB, id string) (*Product, error) {
 	// query
 	const sqlstr = `SELECT ` +
 		`id, product_id, name, search_string, category_id, quantity, price, status, created_at, updated_at ` +

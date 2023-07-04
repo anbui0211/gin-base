@@ -24,14 +24,13 @@ func (m UserCreate) Validate() error {
 func (m UserCreate) ConvertToUserModel() pgmodel.User {
 	return pgmodel.User{
 		PgModel: pgmodel.PgModel{
-			//ID:        uuid.New(),
+			ID:        uuid.New().String(),
 			Status:    "inactive",
 			CreatedAt: time.Now(),
 			UpdatedAt: time.Now(),
 		},
-		Name:   m.Name,
-		Email:  m.Email,
-		UserID: uuid.New().String(),
+		Name:  m.Name,
+		Email: m.Email,
 	}
 }
 
