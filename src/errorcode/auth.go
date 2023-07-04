@@ -1,8 +1,4 @@
-package constant
-
-const (
-	ErrInvalidToken = "token không hợp lệ"
-)
+package errorcode
 
 const (
 	ErrEmptyUsername        = "username không được trống"

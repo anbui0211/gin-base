@@ -1,13 +1,13 @@
 # gin-server
 
-- Swaggger
+### Swaggger
 
 ```shell
 # Swagger app after run app
 http://localhost:8001/swagger/index.html
 ```
 
-- Docker
+### Docker
 
 ```shell
 # Run server in docker
@@ -20,7 +20,7 @@ docker exec -it backend sh
 docker logs -f backend
 ```
 
-- Run app local
+### Run app local
 
 ```shell
 # Run server
@@ -33,7 +33,7 @@ make migrations-up
 make migrations-down
 ```
 
-- Document
+### Document
 
 ```shell
 # Framework go
@@ -50,4 +50,16 @@ https://github.com/go-ozzo/ozzo-validation
 
 # Migration
 https://www.freecodecamp.org/news/database-migration-golang-migrate/
+
+# Xo
+https://github.com/xo/xo
 ```
+
+
+### Note
+```shell
+# Xo: Generate JSON struct model from model in database
+
+```
+
+

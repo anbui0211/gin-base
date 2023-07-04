@@ -7,7 +7,6 @@ import (
 )
 
 func Init(r *gin.Engine) {
-
 	// Middleware ...
 	r.Use(routemiddleware.CORSMiddleware())
 
@@ -16,4 +15,5 @@ func Init(r *gin.Engine) {
 	common(v1)
 	user(v1)
 	auth(v1)
+	importData(v1)
 }

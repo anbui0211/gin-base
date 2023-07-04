@@ -1,12 +1,12 @@
 package requestmodel
 
 import (
-	"gin-base/internal/constant"
 	pgmodel "gin-base/internal/models"
+	"gin-base/src/errorcode"
+	"github.com/google/uuid"
 	"time"
 
 	validation "github.com/go-ozzo/ozzo-validation"
-	"github.com/google/uuid"
 )
 
 type Register struct {
@@ -19,27 +19,28 @@ type Register struct {
 
 func (m Register) Validate() error {
 	return validation.ValidateStruct(&m,
-		validation.Field(&m.Username, validation.Required.Error(constant.ErrEmptyUsername)),
-		validation.Field(&m.Password, validation.Required.Error(constant.ErrEmptyPassword)),
-		validation.Field(&m.Phone, validation.Required.Error(constant.ErrEmptyPhone)),
-		validation.Field(&m.Email, validation.Required.Error(constant.ErrEmptyEmail)),
-		validation.Field(&m.Name, validation.Required.Error(constant.ErrNameNotExist)),
+		validation.Field(&m.Username, validation.Required.Error(errorcode.ErrEmptyUsername)),
+		validation.Field(&m.Password, validation.Required.Error(errorcode.ErrEmptyPassword)),
+		validation.Field(&m.Phone, validation.Required.Error(errorcode.ErrEmptyPhone)),
+		validation.Field(&m.Email, validation.Required.Error(errorcode.ErrEmptyEmail)),
+		validation.Field(&m.Name, validation.Required.Error(errorcode.ErrNameNotExist)),
 	)
 }
 
 func (m Register) ConvertToModel() pgmodel.User {
 	return pgmodel.User{
 		PgModel: pgmodel.PgModel{
-			ID:        uuid.New(),
+			//ID:        uuid.New(),
 			Status:    "inactive",
 			CreatedAt: time.Now(),
 			UpdatedAt: time.Now(),
 		},
 		Username: m.Username,
 		Password: m.Password,
+		Name:     m.Name,
 		Phone:    m.Phone,
 		Email:    m.Email,
-		Name:     m.Name,
+		UserID:   uuid.New().String(),
 	}
 
 }
@@ -51,7 +52,7 @@ type Login struct {
 
 func (m Login) Validate() error {
 	return validation.ValidateStruct(&m,
-		validation.Field(&m.Username, validation.Required.Error(constant.ErrEmptyUsername)),
-		validation.Field(&m.Password, validation.Required.Error(constant.ErrEmptyPassword)),
+		validation.Field(&m.Username, validation.Required.Error(errorcode.ErrEmptyUsername)),
+		validation.Field(&m.Password, validation.Required.Error(errorcode.ErrEmptyPassword)),
 	)
 }

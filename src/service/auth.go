@@ -4,8 +4,8 @@ import (
 	"context"
 	"errors"
 	authinternal "gin-base/internal/auth"
+	"gin-base/src/errorcode"
 
-	"gin-base/internal/constant"
 	pgmodel "gin-base/internal/models"
 	"gin-base/src/database"
 	requestmodel "gin-base/src/model/request"
@@ -29,7 +29,7 @@ func (s authImpl) Register(ctx context.Context, payload requestmodel.Register) (
 
 	// Check user exist
 	if isExisted := s.isExistedUser(ctx, payload.Username); isExisted {
-		return nil, errors.New(constant.ErrAlreadyExistUsername)
+		return nil, errors.New(errorcode.ErrAlreadyExistUsername)
 	}
 
 	newUser := payload.ConvertToModel()
@@ -37,7 +37,7 @@ func (s authImpl) Register(ctx context.Context, payload requestmodel.Register) (
 	// Hash password
 	hashPass, err := authinternal.HashPassword(newUser.Password)
 	if err != nil {
-		return nil, errors.New(constant.ErrAuthHashPassword)
+		return nil, errors.New(errorcode.ErrAuthHashPassword)
 	}
 	newUser.Password = hashPass
 
@@ -47,7 +47,7 @@ func (s authImpl) Register(ctx context.Context, payload requestmodel.Register) (
 
 	// generate token
 	token, err := authinternal.GenerateToken(authinternal.User{
-		ID:   newUser.ID.String(),
+		ID:   newUser.UserID,
 		Name: newUser.Name,
 	})
 
@@ -68,15 +68,15 @@ func (s authImpl) Login(ctx context.Context, payload requestmodel.Login) (*respo
 	)
 
 	if err := db.Where("username = ?", payload.Username).First(&user).Error; err != nil {
-		return nil, errors.New(constant.ErrUsernameNotExist)
+		return nil, errors.New(errorcode.ErrUsernameNotExist)
 	}
 
 	if err := authinternal.ComparePassword(user.Password, payload.Password); err != nil {
-		return nil, errors.New(constant.ErrAuthInvalidPassword)
+		return nil, errors.New(errorcode.ErrAuthInvalidPassword)
 	}
 
 	token, err := authinternal.GenerateToken(authinternal.User{
-		ID:   user.ID.String(),
+		ID:   user.UserID,
 		Name: user.Name,
 	})
 

@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   db:
-    image: postgres:9.5
+    image: postgres
     container_name: postgres
     restart: always
     environment:
@@ -43,25 +43,45 @@ services:
     networks:
       - network
 
-  backend:
-    build:
-      context: .
-      dockerfile: ./cmd/myapp/Dockerfile
-    container_name: backend
-    environment:
-      POSTGRES_HOST: postgres
-      POSTGRES_USER: anbui
-      POSTGRES_PASSWORD: 1234
-      POSTGRES_DB: pgtest
-      POSTGRES_PORT: 5432
-    ports:
-      - '8001:8001'
-    restart: always
-    depends_on:
-      db:
-        condition: service_healthy
-    networks:
-      - network
+#  backend:
+#    build:
+#      context: .
+#      dockerfile: ./cmd/myapp/Dockerfile
+#    container_name: backend
+#    environment:
+#      POSTGRES_HOST: postgres
+#      POSTGRES_USER: anbui
+#      POSTGRES_PASSWORD: 1234
+#      POSTGRES_DB: pgtest
+#      POSTGRES_PORT: 5432
+#    ports:
+#      - '8001:8001'
+#    restart: always
+#    depends_on:
+#      db:
+#        condition: service_healthy
+#    networks:
+#      - network
+
+#  library:
+#     build:
+#       context: ./docker
+#       dockerfile: Dockerfile.library
+#     image: postgres:9.5
+#     container_name: library
+#     environment:
+#       POSTGRES_HOST: postgres
+#       POSTGRES_USER: anbui
+#       POSTGRES_PASSWORD: 1234
+#       POSTGRES_DB: pgtest
+#       POSTGRES_PORT: 5432
+#     volumes:
+#       - ./data/library:/library
+#     depends_on:
+#       - db
+#     tty: true
+#     networks:
+#       - network
 
 #  elasticsearch:
 #    image: docker.elastic.co/elasticsearch/elasticsearch:7.14.0

@@ -3,10 +3,10 @@ package requestmodel
 import (
 	"gin-base/internal/constant"
 	pgmodel "gin-base/internal/models"
+	"github.com/google/uuid"
 	"time"
 
 	validation "github.com/go-ozzo/ozzo-validation"
-	"github.com/google/uuid"
 )
 
 type UserCreate struct {
@@ -24,13 +24,14 @@ func (m UserCreate) Validate() error {
 func (m UserCreate) ConvertToUserModel() pgmodel.User {
 	return pgmodel.User{
 		PgModel: pgmodel.PgModel{
-			ID:        uuid.New(),
+			//ID:        uuid.New(),
 			Status:    "inactive",
 			CreatedAt: time.Now(),
 			UpdatedAt: time.Now(),
 		},
-		Name:  m.Name,
-		Email: m.Email,
+		Name:   m.Name,
+		Email:  m.Email,
+		UserID: uuid.New().String(),
 	}
 }
 

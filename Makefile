@@ -16,7 +16,11 @@ migrations-up:
 migrations-down:
 	@migrate -database ${POSTGRESQL_URL} -path db/migrations down $(num)
 
-
+# generate enity file from database
+xo:
+	mkdir -p src/model/xo
+	rm -f src/model/xo/*
+	xo schema postgres://anbui:1234@localhost:5432/pgtest?sslmode=disable --out=src/model/xo
 
 swagger-app:
 	swag init -d ./ -g cmd/myapp/main.go \

@@ -1,8 +1,8 @@
 package gincontext
 
 import (
+	"context"
 	"github.com/gin-gonic/gin"
-	"golang.org/x/net/context"
 )
 
 func GetContext(c *gin.Context) context.Context {

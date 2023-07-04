@@ -3,13 +3,16 @@ package authinternal
 import (
 	"errors"
 	"fmt"
-	"gin-base/internal/constant"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
 )
 
 var jwtSecret = []byte("your_jwt_secret_key")
+
+const (
+	ErrInvalidToken = "token không hợp lệ"
+)
 
 type User struct {
 	ID   string `json:"id"`
@@ -42,7 +45,7 @@ func VerifyToken(tokenString string) (*User, error) {
 
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok || !token.Valid {
-		return nil, errors.New(constant.ErrInvalidToken)
+		return nil, errors.New(ErrInvalidToken)
 	}
 
 	user := claims["userId"].(User) // Type assertion

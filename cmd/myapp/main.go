@@ -28,7 +28,7 @@ func main() {
 
 	err := godotenv.Load(".env.local")
 	if err != nil {
-		log.Fatalf("Some error occured. Err: %s", err)
+		log.Fatalf("Some errorcode occured. Err: %s", err)
 	}
 
 	// Initialize

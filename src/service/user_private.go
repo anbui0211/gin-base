@@ -27,25 +27,25 @@ func (s userImpl) getListUser(ctx context.Context, users []pgmodel.User) []respo
 }
 
 // brief
-func (s userImpl) brief(ctx context.Context, user pgmodel.User) responsemodel.UserBrief {
+func (s userImpl) brief(ctx context.Context, u pgmodel.User) responsemodel.UserBrief {
 	return responsemodel.UserBrief{
-		ID:        user.ID.String(),
-		Name:      user.Name,
-		Status:    user.Status,
-		CreatedAt: user.CreatedAt,
-		UpdatedAt: user.UpdatedAt,
+		ID:        u.UserID,
+		Name:      u.Name,
+		Status:    u.Status,
+		CreatedAt: u.CreatedAt,
+		UpdatedAt: u.UpdatedAt,
 	}
 }
 
 // detail ...
-func (s userImpl) detail(ctx context.Context, user pgmodel.User) responsemodel.UserDetail {
+func (s userImpl) detail(ctx context.Context, u pgmodel.User) responsemodel.UserDetail {
 	return responsemodel.UserDetail{
-		ID:        user.ID.String(),
-		Name:      user.Name,
-		Email:     user.Email,
-		Status:    user.Status,
-		CreatedAt: user.CreatedAt,
-		UpdatedAt: user.UpdatedAt,
+		ID:        u.UserID,
+		Name:      u.Name,
+		Email:     u.Email,
+		Status:    u.Status,
+		CreatedAt: u.CreatedAt,
+		UpdatedAt: u.UpdatedAt,
 	}
 
 }

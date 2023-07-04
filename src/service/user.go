@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"errors"
+	"gin-base/internal/constant"
 	"gin-base/src/dao"
 	"gin-base/src/database"
 	querymodel "gin-base/src/model/query"
@@ -37,7 +38,7 @@ func (s userImpl) Create(ctx context.Context, user requestmodel.UserCreate) (res
 		return
 	}
 
-	res.ID = userModel.ID.String()
+	res.ID = userModel.UserID
 	return
 }
 
@@ -72,7 +73,7 @@ func (s userImpl) All(ctx context.Context, q querymodel.UserAll) (res responsemo
 // Detail ...
 func (s userImpl) Detail(ctx context.Context, id string) (res responsemodel.UserDetail, err error) {
 	var d = dao.User()
-	user, err := d.Detail(ctx, id)
+	user, err := d.FindByID(ctx, id)
 	if err != nil {
 		return
 	}
@@ -88,26 +89,39 @@ func (u userImpl) Update(ctx context.Context, id string, payload requestmodel.Us
 		userUpdate = payload.ConvertToUserModel()
 	)
 
-	if err = d.Update(ctx, id, userUpdate); err != nil {
-		return nil, errors.New("error when change user")
+	user, err := d.FindByID(ctx, id)
+	if err != nil || err.Error() == constant.ErrRecordNotFound {
 
 	}
 
-	res.ID = id
+	if err = d.Update(ctx, id, userUpdate); err != nil {
+		return nil, errors.New("error when change user")
+	}
+
+	res.ID = user.UserID
 	return
 }
 
 // ChangeStatus ...
 func (u userImpl) ChangeStatus(ctx context.Context, id string, payload requestmodel.UserChangeStatus) (res responsemodel.Upsert, err error) {
-	statusUpdate := map[string]interface{}{
-		"status":     payload.Status,
-		"created_at": time.Now(),
+	var (
+		d            = dao.User()
+		statusUpdate = map[string]interface{}{
+			"status":     payload.Status,
+			"created_at": time.Now(),
+		}
+	)
+
+	user, err := d.FindByID(ctx, id)
+	if err != nil || err.Error() == constant.ErrRecordNotFound {
+
 	}
 
-	d := dao.User()
 	if err = d.ChangeStatus(ctx, id, statusUpdate); err != nil {
-		err = errors.New("error when change user")
+		err = errors.New("errorcode when change user")
 		return
 	}
+
+	res.ID = user.UserID
 	return
 }
