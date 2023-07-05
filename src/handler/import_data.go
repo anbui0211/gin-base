@@ -19,17 +19,16 @@ func ImportData() ImportDataInterface {
 
 func (i importDataImpl) ImportProduct(c *gin.Context) {
 	var (
-		ctx = gincontext.GetContext(c)
-		s   = service.ImportData()
-
+		ctx      = gincontext.GetContext(c)
+		s        = service.ImportData()
 		filename = c.Query("filename")
 	)
 
-	err := s.ImportProducts(ctx, filename)
+	data, err := s.ImportProducts(ctx, filename)
 	if err != nil {
 		response.R400(c, nil, err)
 		return
 	}
 
-	response.R200(c, "", "")
+	response.R200(c, gin.H{"products": data}, "")
 }

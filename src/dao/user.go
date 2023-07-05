@@ -41,7 +41,7 @@ func (userImpl) All(c context.Context, q querymodel.UserAll) (users []pgmodel.Us
 // Count ...
 func (userImpl) Count(ctx context.Context) (count int64) {
 	if err := database.UserCol().Count(&count).Error; err != nil {
-		fmt.Println("[Dao-Count] errorcode: ", err)
+		fmt.Println("[Dao-Count] error: ", err)
 		return
 	}
 
@@ -50,7 +50,7 @@ func (userImpl) Count(ctx context.Context) (count int64) {
 
 // FindByID ...
 func (userImpl) FindByID(ctx context.Context, id string) (user pgmodel.User, err error) {
-	if err = database.UserCol().Where("user_id = ?", id).First(&user).Error; err != nil {
+	if err = database.UserCol().Where("id = ?", id).First(&user).Error; err != nil {
 		log.Fatal("[Dao-FindByID] error: ", err)
 		return
 	}
@@ -60,7 +60,7 @@ func (userImpl) FindByID(ctx context.Context, id string) (user pgmodel.User, err
 
 // Update ...
 func (userImpl) Update(ctx context.Context, id string, payload pgmodel.User) (err error) {
-	if err = database.UserCol().Where("user_id = ?", id).Updates(&payload).Error; err != nil {
+	if err = database.UserCol().Where("id = ?", id).Updates(&payload).Error; err != nil {
 		log.Fatal("[Dao-Update] error: ", err)
 		return
 	}
@@ -69,7 +69,7 @@ func (userImpl) Update(ctx context.Context, id string, payload pgmodel.User) (er
 
 // ChangeStatus ...
 func (userImpl) ChangeStatus(ctx context.Context, id string, payload interface{}) (err error) {
-	if err = database.UserCol().Where("user_id = ?", id).Updates(&payload).Error; err != nil {
+	if err = database.UserCol().Where("id = ?", id).Updates(&payload).Error; err != nil {
 		log.Fatal("[Dao-ChangeStatus] error: ", err)
 		return
 	}

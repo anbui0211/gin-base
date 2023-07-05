@@ -7,6 +7,7 @@ import (
 	"io"
 	"log"
 	"regexp"
+	"strconv"
 	"strings"
 )
 
@@ -42,17 +43,16 @@ var (
 	regexRequireAlphaVn = ColumnDefinition{ColType: ColumnTypeString, regexp: regexp.MustCompile(patternRequireTypeAlphaVn)}
 	regexRequireDigit   = ColumnDefinition{ColType: ColumnTypeDigit, regexp: regexp.MustCompile(patternRequireTypesDigit)}
 	regexDecimal        = ColumnDefinition{ColType: ColumnTypeDecimal, regexp: regexp.MustCompile(patternDecimal)}
+	regexStringDigit    = ColumnDefinition{ColType: ColumnTypeString, regexp: regexp.MustCompile(patternStringDigit)}
 )
 
-//
-// Column Import
-//
-
+// ImportColumDef ...
 type ImportColumDef struct {
 	Name string
 	Def  ColumnDefinition
 }
 
+// ColumnDefinition ...
 type ColumnDefinition struct {
 	ColType ColumnType
 	regexp  *regexp.Regexp
@@ -60,26 +60,20 @@ type ColumnDefinition struct {
 
 type ColumnType uint16
 
-//
-// Row Import
-//
-
-// ImportRowSet ファイル構造体
+// ImportRowSet ...
 type ImportRowSet struct {
 	def  map[int]string
 	rows []*ImportRow
 }
 
-// ImportRow インポート行の構造体
+// ImportRow ...
 type ImportRow struct {
 	idx  int
 	def  *map[int]string
 	cols map[int]ImportColumn
-	//errors           []ImportError
-	//importErrorInfos []ImportErrorInfo
 }
 
-// ImportColumn カラムの構造体
+// ImportColumn ...
 type ImportColumn struct {
 	Index int
 	Value string
@@ -95,8 +89,6 @@ func (s *importDataImpl) readAndCheckCsv(ctx context.Context, data io.ReadCloser
 		rs.def[idx] = icm[idx].Name
 	}
 
-	//fmt.Println("[readAndCheckCsv - icm]: ", icm)
-	//fmt.Println("[readAndCheckCsv - rs]: ", rs)
 	//fmt.Println("[readAndCheckCsv - rs.def]: ", rs.def) // -> map[0:name 1:searchString 2:categoryId 3:quantity 4:price 5:status]
 
 	reader := newCsvReader(data)
@@ -179,4 +171,16 @@ func (irs *ImportRowSet) addRow(row ...*ImportRow) {
 // String ...
 func (ir *ImportRow) String(idx int) string {
 	return ir.cols[idx].Value
+}
+
+// Float64 ...
+func (ir *ImportRow) Float64(idx int) float64 {
+	result, _ := strconv.ParseFloat(ir.cols[idx].Value, 64)
+	return result
+}
+
+// Int64 ...
+func (ir *ImportRow) Int64(idx int) int64 {
+	result, _ := strconv.ParseInt(ir.cols[idx].Value, 0, 64)
+	return result
 }
