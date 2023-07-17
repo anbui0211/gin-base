@@ -74,7 +74,7 @@ func (s *importDataImpl) importDataProduct(ctx context.Context, data io.ReadClos
 	}
 
 	var pSvc = Product()
-	if err = pSvc.CreateManyProduct(ctx, s.products); err != nil {
+	if err = pSvc.BulkCreateProduct(ctx, s.products); err != nil {
 		return
 	}
 
