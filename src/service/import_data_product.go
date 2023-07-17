@@ -4,10 +4,11 @@ import (
 	"context"
 	pgmodel "gin-base/internal/models"
 	"gin-base/src/errorcode"
-	"gopkg.in/errgo.v2/errors"
 	"io"
 	"log"
 	"os"
+
+	"gopkg.in/errgo.v2/errors"
 )
 
 const (
@@ -69,6 +70,7 @@ func (s *importDataImpl) importDataProduct(ctx context.Context, data io.ReadClos
 
 	// Set items
 	if err := s.setItemsProduct(ctx); err != nil {
+		return err
 	}
 
 	var pSvc = Product()

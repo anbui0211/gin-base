@@ -5,13 +5,14 @@ import (
 	"context"
 	"encoding/csv"
 	"gin-base/src/errorcode"
-	"github.com/shopspring/decimal"
-	"gopkg.in/errgo.v2/errors"
 	"io"
 	"log"
 	"regexp"
 	"strconv"
 	"strings"
+
+	"github.com/shopspring/decimal"
+	"gopkg.in/errgo.v2/errors"
 )
 
 const (
