@@ -4,6 +4,9 @@ import (
 	"bufio"
 	"context"
 	"encoding/csv"
+	"gin-base/src/errorcode"
+	"github.com/shopspring/decimal"
+	"gopkg.in/errgo.v2/errors"
 	"io"
 	"log"
 	"regexp"
@@ -89,8 +92,6 @@ func (s *importDataImpl) readAndCheckCsv(ctx context.Context, data io.ReadCloser
 		rs.def[idx] = icm[idx].Name
 	}
 
-	//fmt.Println("[readAndCheckCsv - rs.def]: ", rs.def) // -> map[0:name 1:searchString 2:categoryId 3:quantity 4:price 5:status]
-
 	reader := newCsvReader(data)
 	ridx := 0
 	for {
@@ -124,7 +125,10 @@ func (s *importDataImpl) readAndCheckCsv(ctx context.Context, data io.ReadCloser
 				continue
 			}
 
-			row.addColumn(ctx, cidx, icm[cidx].Def, record[cidx])
+			if err := row.addColumn(ctx, cidx, icm[cidx].Def, record[cidx]); err != nil {
+				return err
+			}
+
 		}
 
 		rs.addRow(&row)
@@ -148,19 +152,34 @@ func newCsvReader(r io.Reader) *csv.Reader {
 }
 
 // addColumn ...
-func (ir *ImportRow) addColumn(ctx context.Context, cidx int, def ColumnDefinition, value string) {
+func (ir *ImportRow) addColumn(ctx context.Context, cidx int, def ColumnDefinition, value string) error {
 	ir.cols[cidx] = ImportColumn{
 		Index: cidx,
 		Value: value,
 	}
 
-	// Check regex matchString -> làm sau
-
-	if value == "" {
-		return
+	// Check regular expression
+	if !def.regexp.MatchString(value) {
+		return errors.New(errorcode.ErrRegularExpression)
 	}
 
-	// Switch case check  type column -> làm sau
+	if value == "" {
+		return errors.New(errorcode.ErrEmptyColumnValue)
+	}
+
+	// Check column definition type
+	switch def.ColType {
+	case ColumnTypeDecimal:
+		if _, err := decimal.NewFromString(value); err != nil {
+			return errors.New(errorcode.ErrColumTypeIsNotDecimal)
+		}
+	case ColumnTypeDigit:
+		if _, err := strconv.Atoi(value); err != nil {
+			return errors.New(errorcode.ErrColumTypeIsNotDigit)
+		}
+	}
+
+	return nil
 }
 
 // addRow ...
@@ -169,18 +188,18 @@ func (irs *ImportRowSet) addRow(row ...*ImportRow) {
 }
 
 // String ...
-func (ir *ImportRow) String(idx int) string {
+func (ir *ImportRow) toString(idx int) string {
 	return ir.cols[idx].Value
 }
 
 // Float64 ...
-func (ir *ImportRow) Float64(idx int) float64 {
+func (ir *ImportRow) toFloat64(idx int) float64 {
 	result, _ := strconv.ParseFloat(ir.cols[idx].Value, 64)
 	return result
 }
 
 // Int64 ...
-func (ir *ImportRow) Int64(idx int) int64 {
+func (ir *ImportRow) toInt64(idx int) int64 {
 	result, _ := strconv.ParseInt(ir.cols[idx].Value, 0, 64)
 	return result
 }

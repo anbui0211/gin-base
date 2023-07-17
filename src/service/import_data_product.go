@@ -92,30 +92,18 @@ func (s *importDataImpl) setItemsProduct(ctx context.Context) error {
 	return nil
 }
 
-// getProductId ...
-func getProductId(row *ImportRow) (productId string) {
-	productId = row.String(ImportColumnProductId)
-	return
-}
-
-// getProductName ...
-func getProductName(row *ImportRow) (productName string) {
-	productName = row.String(ImportColumnProductName)
-	return
-}
-
 // setProduct ...
 func (s *importDataImpl) setProduct(ctx context.Context, row *ImportRow) (product pgmodel.Product, err error) {
 	// handle empty and invalid
 
 	// Set product
-	product.ID = row.String(ImportColumnProductId)
-	product.Name = row.String(ImportColumnProductName)
-	product.SearchString = row.String(ImportColumnProductSearchString)
-	product.CategoryID = row.String(ImportColumnProductCategoryId)
-	product.Quantity = row.Int64(ImportColumnProductQuantity)
-	product.Price = row.Float64(ImportColumnProductPrice)
-	product.Status = row.String(ImportColumnProductStatus)
+	product.ID = row.toString(ImportColumnProductId)
+	product.Name = row.toString(ImportColumnProductName)
+	product.SearchString = row.toString(ImportColumnProductSearchString)
+	product.CategoryID = row.toString(ImportColumnProductCategoryId)
+	product.Quantity = row.toInt64(ImportColumnProductQuantity)
+	product.Price = row.toFloat64(ImportColumnProductPrice)
+	product.Status = row.toString(ImportColumnProductStatus)
 
 	return
 }
