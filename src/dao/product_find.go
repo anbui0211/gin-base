@@ -49,7 +49,7 @@ func (productImpl) FindByCondition(ctx context.Context, q querymodel.Product) (r
 	return
 }
 
-// FindByCondition ...
+// FindRowsByCondition ...
 func (productImpl) FindRowsByCondition(ctx context.Context, q querymodel.Product) (result []pgmodel.Product, err error) {
 	offset := int((q.Page - 1) * q.Limit)
 	limit := int(q.Limit)
