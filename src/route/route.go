@@ -16,4 +16,5 @@ func Init(r *gin.Engine) {
 	user(v1)
 	auth(v1)
 	importData(v1)
+	exportData(v1)
 }

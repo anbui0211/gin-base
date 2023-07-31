@@ -31,7 +31,10 @@ func (userImpl) All(c context.Context, q querymodel.UserAll) (users []pgmodel.Us
 		limit = 5
 	}
 
-	if err := database.UserCol().Limit(limit).Offset(offset).Find(&users).Error; err != nil {
+	if err := database.UserCol().
+		Limit(limit).
+		Offset(offset).
+		Find(&users).Error; err != nil {
 		return
 	}
 
