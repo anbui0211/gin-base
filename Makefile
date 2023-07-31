@@ -1,7 +1,7 @@
 #!bin/bash
 export POSTGRESQL_URL=postgres://anbui:1234@localhost:5432/pgtest?sslmode=disable
 
-make run:
+run-app:
 	@go run cmd/myapp/main.go
 
 # make create-migrations name=add_a_column

@@ -1,4 +1,4 @@
-package ginruntime
+package pruntime
 
 import (
 	"fmt"

@@ -11,7 +11,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/shopspring/decimal"
 	"gopkg.in/errgo.v2/errors"
 )
 
@@ -159,26 +158,26 @@ func (ir *ImportRow) addColumn(ctx context.Context, cidx int, def ColumnDefiniti
 		Value: value,
 	}
 
-	// Check regular expression
-	if !def.regexp.MatchString(value) {
-		return errors.New(errorcode.ErrRegularExpression)
-	}
+	// // Check regular expression
+	// if !def.regexp.MatchString(value) {
+	// 	return errors.New(errorcode.ErrRegularExpression)
+	// }
 
 	if value == "" {
 		return errors.New(errorcode.ErrEmptyColumnValue)
 	}
 
-	// Check column definition type
-	switch def.ColType {
-	case ColumnTypeDecimal:
-		if _, err := decimal.NewFromString(value); err != nil {
-			return errors.New(errorcode.ErrColumTypeIsNotDecimal)
-		}
-	case ColumnTypeDigit:
-		if _, err := strconv.Atoi(value); err != nil {
-			return errors.New(errorcode.ErrColumTypeIsNotDigit)
-		}
-	}
+	// // Check column definition type
+	// switch def.ColType {
+	// case ColumnTypeDecimal:
+	// 	if _, err := decimal.NewFromString(value); err != nil {
+	// 		return errors.New(errorcode.ErrColumTypeIsNotDecimal)
+	// 	}
+	// case ColumnTypeDigit:
+	// 	if _, err := strconv.Atoi(value); err != nil {
+	// 		return errors.New(errorcode.ErrColumTypeIsNotDigit)
+	// 	}
+	// }
 
 	return nil
 }

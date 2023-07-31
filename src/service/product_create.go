@@ -8,5 +8,5 @@ import (
 
 // BulkCreateProduct ...
 func (productImpl) BulkCreateProduct(ctx context.Context, products []pgmodel.Product) error {
-	return dao.Product().InsertMany(ctx, products)
+	return dao.Product().BulkCreate(ctx, products)
 }
