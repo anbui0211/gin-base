@@ -1,4 +1,4 @@
-package routemiddleware
+package middlewareinternal
 
 import "github.com/gin-gonic/gin"
 

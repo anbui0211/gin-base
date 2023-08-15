@@ -9,17 +9,14 @@ import (
 	querymodel "gin-base/src/model/query"
 )
 
-// FindByID ...
 func (productImpl) FindByID(ctx context.Context, id string) (product pgmodel.Product, err error) {
 	if err = database.ProductCol().Where("id = ?", id).First(&product).Error; err != nil {
 		log.Fatal("[Product-dao-findByID] error: ", err)
 		return
 	}
-
 	return
 }
 
-// FindByCondition ...
 func (productImpl) FindByCondition(ctx context.Context, q querymodel.Product) (result []pgmodel.Product) {
 	offset := int((q.Page - 1) * q.Limit)
 	limit := int(q.Limit)
@@ -49,7 +46,6 @@ func (productImpl) FindByCondition(ctx context.Context, q querymodel.Product) (r
 	return
 }
 
-// FindRowsByCondition ...
 func (productImpl) FindRowsByCondition(ctx context.Context, q querymodel.Product) (result []pgmodel.Product, err error) {
 	offset := int((q.Page - 1) * q.Limit)
 	limit := int(q.Limit)

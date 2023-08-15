@@ -6,7 +6,7 @@ import (
 	"gin-base/src/dao"
 )
 
-// BulkCreateProduct ...
+// BulkCreateProduct  create many products
 func (productImpl) BulkCreateProduct(ctx context.Context, products []pgmodel.Product) error {
 	return dao.Product().BulkCreate(ctx, products)
 }
