@@ -58,7 +58,10 @@ https://github.com/xo/xo
 
 ### Note
 ```shell
-# Xo: Generate JSON struct model from model in database
+# Xo: Can not access file after upload aws
+Research : 
+  "access bucket policy" 
+  "aws policy s3 json example"
 
 ```
 
