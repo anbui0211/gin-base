@@ -1,0 +1,18 @@
+### Upload products
+POST http://localhost:8001/api/v1/upload/products HTTP/1.1
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="file"; filename="product.txt"
+
+< /Users/phuanbui/Workspace/Me/Service/gin-base/assets/upload_file/product.txt
+--boundary
+Content-Disposition: form-data; name="advertType"
+
+1
+--boundary
+
+### Get
+GET http://localhost:8001/api/v1/upload/products
+Accept: application/json
+
