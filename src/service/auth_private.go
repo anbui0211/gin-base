@@ -7,6 +7,7 @@ import (
 	"log"
 )
 
+// isExistedUser check exist user
 func (s authImpl) isExistedUser(ctx context.Context, username string) bool {
 	var (
 		db   = database.UserCol()

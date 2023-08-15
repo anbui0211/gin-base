@@ -7,7 +7,6 @@ import (
 	"sync"
 )
 
-// getListUser ...
 func (s userImpl) getListUser(ctx context.Context, users []pgmodel.User) []responsemodel.UserBrief {
 	var (
 		wg     sync.WaitGroup
@@ -26,7 +25,6 @@ func (s userImpl) getListUser(ctx context.Context, users []pgmodel.User) []respo
 	return result
 }
 
-// brief
 func (s userImpl) brief(ctx context.Context, u pgmodel.User) responsemodel.UserBrief {
 	return responsemodel.UserBrief{
 		ID:        u.ID,
@@ -37,7 +35,6 @@ func (s userImpl) brief(ctx context.Context, u pgmodel.User) responsemodel.UserB
 	}
 }
 
-// detail ...
 func (s userImpl) detail(ctx context.Context, u pgmodel.User) responsemodel.UserDetail {
 	return responsemodel.UserDetail{
 		ID:        u.ID,

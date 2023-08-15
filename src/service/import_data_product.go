@@ -62,7 +62,6 @@ func (s *importDataImpl) ImportProducts(ctx context.Context, fileName string) (i
 	return len(s.products), nil
 }
 
-// importDataProduct ...
 func (s *importDataImpl) importDataProduct(ctx context.Context, data io.ReadCloser) (err error) {
 	// ReadAndCheckCsv
 	if err = s.readAndCheckCsv(ctx, data, ProductImportDef, &s.rs); err != nil {

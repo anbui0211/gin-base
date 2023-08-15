@@ -1,14 +1,13 @@
 package route
 
 import (
-	routemiddleware "gin-base/src/route/middleware"
-
+	middlewareinternal "gin-base/internal/util/middlewares"
 	"github.com/gin-gonic/gin"
 )
 
 func Init(r *gin.Engine) {
 	// Middleware ...
-	r.Use(routemiddleware.CORSMiddleware())
+	r.Use(middlewareinternal.CORSMiddleware())
 
 	v1 := r.Group("/api/v1")
 
@@ -16,5 +15,4 @@ func Init(r *gin.Engine) {
 	user(v1)
 	auth(v1)
 	importData(v1)
-	exportData(v1)
 }

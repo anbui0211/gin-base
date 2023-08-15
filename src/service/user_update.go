@@ -10,7 +10,6 @@ import (
 	"time"
 )
 
-// Update ...
 func (u userImpl) Update(ctx context.Context, id string, payload requestmodel.UserUpdate) (res *responsemodel.Upsert, err error) {
 	var (
 		d          = dao.User()
@@ -30,7 +29,6 @@ func (u userImpl) Update(ctx context.Context, id string, payload requestmodel.Us
 	return
 }
 
-// ChangeStatus ...
 func (u userImpl) ChangeStatus(ctx context.Context, id string, payload requestmodel.UserChangeStatus) (res responsemodel.Upsert, err error) {
 	var (
 		d            = dao.User()

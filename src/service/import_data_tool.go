@@ -49,40 +49,34 @@ var (
 	regexStringDigit    = ColumnDefinition{ColType: ColumnTypeString, regexp: regexp.MustCompile(patternStringDigit)}
 )
 
-// ImportColumDef ...
 type ImportColumDef struct {
 	Name string
 	Def  ColumnDefinition
 }
 
-// ColumnDefinition ...
+type ColumnType uint16
+
 type ColumnDefinition struct {
 	ColType ColumnType
 	regexp  *regexp.Regexp
 }
 
-type ColumnType uint16
-
-// ImportRowSet ...
 type ImportRowSet struct {
 	def  map[int]string
 	rows []*ImportRow
 }
 
-// ImportRow ...
 type ImportRow struct {
 	idx  int
 	def  *map[int]string
 	cols map[int]ImportColumn
 }
 
-// ImportColumn ...
 type ImportColumn struct {
 	Index int
 	Value string
 }
 
-// readAndCheckCsv ...
 func (s *importDataImpl) readAndCheckCsv(ctx context.Context, data io.ReadCloser, importColumnMap map[int]ImportColumDef, rs *ImportRowSet) error {
 	icm := importColumnMap
 	defLen := len(icm)
@@ -137,7 +131,6 @@ func (s *importDataImpl) readAndCheckCsv(ctx context.Context, data io.ReadCloser
 	return nil
 }
 
-// newCsvReader ...
 func newCsvReader(r io.Reader) *csv.Reader {
 	br := bufio.NewReader(r)
 	bs, err := br.Peek(3)
@@ -151,7 +144,6 @@ func newCsvReader(r io.Reader) *csv.Reader {
 	return csv.NewReader(br)
 }
 
-// addColumn ...
 func (ir *ImportRow) addColumn(ctx context.Context, cidx int, def ColumnDefinition, value string) error {
 	ir.cols[cidx] = ImportColumn{
 		Index: cidx,
@@ -182,23 +174,19 @@ func (ir *ImportRow) addColumn(ctx context.Context, cidx int, def ColumnDefiniti
 	return nil
 }
 
-// addRow ...
 func (irs *ImportRowSet) addRow(row ...*ImportRow) {
 	irs.rows = append(irs.rows, row...)
 }
 
-// String ...
 func (ir *ImportRow) toString(idx int) string {
 	return ir.cols[idx].Value
 }
 
-// Float64 ...
 func (ir *ImportRow) toFloat64(idx int) float64 {
 	result, _ := strconv.ParseFloat(ir.cols[idx].Value, 64)
 	return result
 }
 
-// Int64 ...
 func (ir *ImportRow) toInt64(idx int) int64 {
 	result, _ := strconv.ParseInt(ir.cols[idx].Value, 0, 64)
 	return result

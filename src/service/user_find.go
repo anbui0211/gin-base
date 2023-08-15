@@ -8,9 +8,7 @@ import (
 	"sync"
 )
 
-// All ...
 func (s userImpl) All(ctx context.Context, q querymodel.UserAll) (res responsemodel.UserAll) {
-
 	var (
 		wg = sync.WaitGroup{}
 		d  = dao.User()
@@ -36,7 +34,6 @@ func (s userImpl) All(ctx context.Context, q querymodel.UserAll) (res responsemo
 	return
 }
 
-// Detail ...
 func (s userImpl) Detail(ctx context.Context, id string) (res responsemodel.UserDetail, err error) {
 	var d = dao.User()
 	user, err := d.FindByID(ctx, id)

@@ -7,7 +7,7 @@ import (
 	responsemodel "gin-base/src/model/response"
 )
 
-// Create ...
+// Create user with client data
 func (s userImpl) Create(ctx context.Context, user requestmodel.UserCreate) (res responsemodel.Upsert, err error) {
 	var (
 		db        = database.UserCol()

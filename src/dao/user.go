@@ -23,7 +23,6 @@ func User() UserInterface {
 	return &userImpl{}
 }
 
-// All ...
 func (userImpl) All(c context.Context, q querymodel.UserAll) (users []pgmodel.User) {
 	offset := int((q.Page - 1) * q.Limit)
 	limit := int(q.Limit)
@@ -41,27 +40,22 @@ func (userImpl) All(c context.Context, q querymodel.UserAll) (users []pgmodel.Us
 	return
 }
 
-// Count ...
 func (userImpl) Count(ctx context.Context) (count int64) {
 	if err := database.UserCol().Count(&count).Error; err != nil {
 		fmt.Println("[Dao-Count] error: ", err)
 		return
 	}
-
 	return
 }
 
-// FindByID ...
 func (userImpl) FindByID(ctx context.Context, id string) (user pgmodel.User, err error) {
 	if err = database.UserCol().Where("id = ?", id).First(&user).Error; err != nil {
 		log.Fatal("[Dao-FindByID] error: ", err)
 		return
 	}
-
 	return
 }
 
-// Update ...
 func (userImpl) Update(ctx context.Context, id string, payload pgmodel.User) (err error) {
 	if err = database.UserCol().Where("id = ?", id).Updates(&payload).Error; err != nil {
 		log.Fatal("[Dao-Update] error: ", err)
