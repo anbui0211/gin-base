@@ -2,11 +2,12 @@ package service
 
 import (
 	"context"
-	pgmodel "gin-base/internal/models"
-	"gin-base/src/errorcode"
 	"io"
 	"log"
 	"os"
+
+	pgmodel "gin-base/internal/models"
+	"gin-base/src/errorcode"
 
 	"gopkg.in/errgo.v2/errors"
 )
@@ -34,12 +35,12 @@ var ProductImportDef = map[int]ImportColumDef{
 // ImportProducts ...
 func (s *importDataImpl) ImportProducts(ctx context.Context, fileName string) (int, error) {
 	var (
-		appFolder = "/assets/data_csv"
+		appFolder = "/assets/testdata"
 	)
 
 	curDir, _ := os.Getwd()               // ../gin-base
-	curDir += appFolder                   // ../gin-base/assets/data_csv
-	importFile := curDir + "/" + fileName // ../gin-base/assets/data_csv/products.csv
+	curDir += appFolder                   // ../gin-base/assets/testdata
+	importFile := curDir + "/" + fileName // ../gin-base/assets/testdata/products.csv
 
 	f, err := os.Open(importFile)
 	if err != nil {
